@@ -1,0 +1,13 @@
+# VS Code settings
+.vscode/
+
+# Maven
+target/
+**/target/
+
+# Java-specific
+*.class
+*.log
+
+# Scripts locais
+mvn-java24.bat
