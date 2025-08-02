@@ -50,6 +50,12 @@ public class UIController extends Application implements IUIController
         vBox.getChildren().addAll(tabPane);
 
         Scene scene = new Scene(vBox, 960, 600);
+        
+        // Aplicar CSS personalizado para os menus
+        scene.getStylesheets().add("data:text/css," +
+            ".menu-item { -fx-background-color: #2196F3; -fx-text-fill: white;} " +
+            ".menu-item:hover { -fx-background-color: #1976D2; } " +
+            ".menu-item:focused { -fx-background-color: #1565C0; }");
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -83,6 +89,9 @@ public class UIController extends Application implements IUIController
         tab.setText(tabText);
         tab.setContent(contents);
         tabPane.getTabs().add(tab);
+        
+        // Automaticamente selecionar a nova aba
+        tabPane.getSelectionModel().select(tab);
 
         return true;
     }

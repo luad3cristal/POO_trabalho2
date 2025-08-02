@@ -60,11 +60,12 @@ public class BookPlugin implements IPlugin {
         
         // Content area
         VBox contentArea = new VBox(10);
+        contentArea.setPadding(new Insets(15));
         ScrollPane scrollPane = new ScrollPane(contentArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(400);
         
-        // Button actions
+        // Button actions - go directly to forms
         listButton.setOnAction(e -> showBookList(contentArea));
         addButton.setOnAction(e -> showBookForm(contentArea));
         editButton.setOnAction(e -> showEditBookForm(contentArea));
@@ -78,9 +79,9 @@ public class BookPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label listTitle = new Label("Lista de Livros");
-        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
-        VBox bookList = new VBox(5);
+        VBox bookList = new VBox(2);
         
         try {
             java.util.List<Book> books = bookService.readAll();
@@ -89,7 +90,7 @@ public class BookPlugin implements IPlugin {
                     "Cópias disponíveis: " + book.getCopiesAvailable() : 
                     "Nenhuma cópia disponível";
                 
-                String bookInfo = String.format("%d. %s - %s - %s - %d - %s", 
+                String bookInfo = String.format("%d. %s - %s\nISBN: %s - Ano de Publicação: %d - %s", 
                     book.getId(), 
                     book.getTitle(), 
                     book.getAuthor(), 
@@ -98,7 +99,7 @@ public class BookPlugin implements IPlugin {
                     copiesInfo);
                 
                 Label bookLabel = new Label(bookInfo);
-                bookLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1px;");
+                bookLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
                 bookList.getChildren().add(bookLabel);
             }
         } catch (Exception e) {
@@ -114,7 +115,7 @@ public class BookPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Cadastrar Novo Livro");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -191,7 +192,7 @@ public class BookPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Editar Livro");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -304,7 +305,7 @@ public class BookPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Excluir Livro");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -313,7 +314,8 @@ public class BookPlugin implements IPlugin {
         idField.setPromptText("ID do Livro");
         
         Label bookInfoLabel = new Label();
-        bookInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        bookInfoLabel.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
+        bookInfoLabel.setMaxWidth(Double.MAX_VALUE);
         
         Button loadButton = new Button("Carregar");
         loadButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #2196F3; -fx-text-fill: white;");
@@ -336,8 +338,8 @@ public class BookPlugin implements IPlugin {
                 Book book = bookService.read(id);
                 
                 if (book != null) {
-                    bookInfoLabel.setText(String.format("ID: %d | Título: %s | Autor: %s | ISBN: %s", 
-                        book.getId(), book.getTitle(), book.getAuthor(), book.getIsbn()));
+                    bookInfoLabel.setText(String.format("ID: %d - %s - %s\nISBN: %s - Ano: %d", 
+                        book.getId(), book.getTitle(), book.getAuthor(), book.getIsbn(), book.getPublishedYear()));
                     deleteButton.setDisable(false);
                     messageLabel.setText("Livro carregado. Confirme a exclusão.");
                     messageLabel.setStyle("-fx-text-fill: orange;");

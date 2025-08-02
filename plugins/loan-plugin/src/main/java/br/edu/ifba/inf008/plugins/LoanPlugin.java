@@ -61,11 +61,12 @@ public class LoanPlugin implements IPlugin {
         
         // Content area
         VBox contentArea = new VBox(10);
+        contentArea.setPadding(new Insets(15));
         ScrollPane scrollPane = new ScrollPane(contentArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(400);
         
-        // Button actions
+        // Button actions - go directly to forms
         listButton.setOnAction(e -> showLoanList(contentArea));
         addButton.setOnAction(e -> showLoanForm(contentArea));
         returnButton.setOnAction(e -> showReturnForm(contentArea));
@@ -79,25 +80,25 @@ public class LoanPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label listTitle = new Label("Lista de Empréstimos");
-        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
-        VBox loanList = new VBox(5);
+        VBox loanList = new VBox(2);
         
         try {
             java.util.List<Loan> loans = loanService.readAll();
             for (Loan loan : loans) {
                 String userName = loanServiceImpl.getUserNameById(loan.getUserId());
                 String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
-                
-                String loanInfo = String.format("%d. %s - %s - %s - %s", 
-                    loan.getId(), 
-                    userName, 
-                    bookTitle, 
+
+                String loanInfo = String.format("%d. Usuário: %s - Livro: %s \nData de Empréstimo: %s | Data de Devolução: %s",
+                    loan.getId(),
+                    userName,
+                    bookTitle,
                     loan.getLoanDate() != null ? loan.getLoanDate().toString() : "N/A",
                     loan.getReturnDate() != null ? loan.getReturnDate().toString() : "Não devolvido");
                 
                 Label loanLabel = new Label(loanInfo);
-                loanLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1px;");
+                loanLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
                 loanList.getChildren().add(loanLabel);
             }
         } catch (Exception e) {
@@ -113,7 +114,7 @@ public class LoanPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Cadastrar Novo Empréstimo");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -270,7 +271,7 @@ public class LoanPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Registrar Devolução");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -279,7 +280,8 @@ public class LoanPlugin implements IPlugin {
         loanIdField.setPromptText("ID do Empréstimo");
         
         Label loanInfoLabel = new Label();
-        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
+        loanInfoLabel.setMaxWidth(Double.MAX_VALUE);
         
         DatePicker returnDatePicker = new DatePicker();
         returnDatePicker.setPromptText("Data de Devolução");
@@ -312,8 +314,10 @@ public class LoanPlugin implements IPlugin {
                         messageLabel.setText("Empréstimo já devolvido.");
                         messageLabel.setStyle("-fx-text-fill: orange;");
                     } else {
-                        loanInfoLabel.setText(String.format("Empréstimo ID: %d | Usuário: %d | Livro: %d | Data: %s", 
-                            loan.getId(), loan.getUserId(), loan.getLivroId(), loan.getLoanDate()));
+                        String userName = loanServiceImpl.getUserNameById(loan.getUserId());
+                        String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                        loanInfoLabel.setText(String.format("ID: %d - Usuário: %s - Livro: %s\nData do Empréstimo: %s", 
+                            loan.getId(), userName, bookTitle, loan.getLoanDate()));
                         returnButton.setDisable(false);
                         messageLabel.setText("Empréstimo carregado. Pronto para devolução.");
                         messageLabel.setStyle("-fx-text-fill: green;");
@@ -373,7 +377,7 @@ public class LoanPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Excluir Empréstimo");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -382,7 +386,8 @@ public class LoanPlugin implements IPlugin {
         idField.setPromptText("ID do Empréstimo");
         
         Label loanInfoLabel = new Label();
-        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
+        loanInfoLabel.setMaxWidth(Double.MAX_VALUE);
         
         Button loadButton = new Button("Carregar");
         loadButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #2196F3; -fx-text-fill: white;");
@@ -405,8 +410,10 @@ public class LoanPlugin implements IPlugin {
                 Loan loan = loanService.read(id);
                 
                 if (loan != null) {
-                    loanInfoLabel.setText(String.format("ID: %d | Usuário: %d | Livro: %d | Empréstimo: %s | Devolução: %s", 
-                        loan.getId(), loan.getUserId(), loan.getLivroId(), 
+                    String userName = loanServiceImpl.getUserNameById(loan.getUserId());
+                    String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                    loanInfoLabel.setText(String.format("ID: %d  - Usuário: %s - Livro: %s \nEmpréstimo: %s - Devolução: %s", 
+                        loan.getId(), userName, bookTitle, 
                         loan.getLoanDate(), loan.getReturnDate() != null ? loan.getReturnDate().toString() : "Pendente"));
                     deleteButton.setDisable(false);
                     messageLabel.setText("Empréstimo carregado. Confirme a exclusão.");

@@ -61,11 +61,12 @@ public class UserPlugin implements IPlugin {
         
         // Content area
         VBox contentArea = new VBox(10);
+        contentArea.setPadding(new Insets(15));
         ScrollPane scrollPane = new ScrollPane(contentArea);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(400);
         
-        // Button actions
+        // Button actions - go directly to forms
         listButton.setOnAction(e -> showUserList(contentArea));
         addButton.setOnAction(e -> showUserForm(contentArea));
         editButton.setOnAction(e -> showEditUserForm(contentArea));
@@ -79,10 +80,10 @@ public class UserPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label listTitle = new Label("Lista de Usuários");
-        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
-        
-        VBox userList = new VBox(5);
-        
+        listTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+
+        VBox userList = new VBox(2);
+
         try {
             java.util.List<User> users = userService.readAll();
             for (User user : users) {
@@ -97,7 +98,7 @@ public class UserPlugin implements IPlugin {
                     registrationInfo);
                 
                 Label userLabel = new Label(userInfo);
-                userLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1px;");
+                userLabel.setStyle("-fx-font-size: 14px; -fx-padding: 5px;");
                 userList.getChildren().add(userLabel);
             }
         } catch (Exception e) {
@@ -113,7 +114,7 @@ public class UserPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Cadastrar Novo Usuário");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -168,7 +169,7 @@ public class UserPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Editar Usuário");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -263,7 +264,7 @@ public class UserPlugin implements IPlugin {
         contentArea.getChildren().clear();
         
         Label formTitle = new Label("Excluir Usuário");
-        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         
         VBox form = new VBox(10);
         form.setMaxWidth(400);
@@ -272,7 +273,8 @@ public class UserPlugin implements IPlugin {
         idField.setPromptText("ID do Usuário");
         
         Label userInfoLabel = new Label();
-        userInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        userInfoLabel.setStyle("-fx-font-size: 14px; -fx-wrap-text: true;");
+        userInfoLabel.setMaxWidth(Double.MAX_VALUE);
         
         Button loadButton = new Button("Carregar");
         loadButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #2196F3; -fx-text-fill: white;");
@@ -295,7 +297,7 @@ public class UserPlugin implements IPlugin {
                 User user = userService.read(id);
                 
                 if (user != null) {
-                    userInfoLabel.setText(String.format("ID: %d | Nome: %s | Email: %s", 
+                    userInfoLabel.setText(String.format("ID: %d - Nome: %s - Email: %s", 
                         user.getId(), user.getName(), user.getEmail()));
                     deleteButton.setDisable(false);
                     messageLabel.setText("Usuário carregado. Confirme a exclusão.");
