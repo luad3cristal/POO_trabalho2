@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.sql.SQLNonTransientConnectionException;
 
 public class PluginController implements IPluginController
 {
@@ -40,8 +41,11 @@ public class PluginController implements IPluginController
 
             return true;
         } catch (Exception e) {
-            System.out.println("Error: " + e.getClass().getName() + " - " + e.getMessage());
-
+            if (e instanceof java.sql.SQLException) {
+                System.out.println("Erro de conexão com o banco de dados: " + e.getMessage() + ". Confirme que o docker foi aberto corretamente.");
+            } else {
+                System.out.println("Error: " + e.getClass().getName() + " - " + e.getMessage());
+            }
             return false;
         }
     }
