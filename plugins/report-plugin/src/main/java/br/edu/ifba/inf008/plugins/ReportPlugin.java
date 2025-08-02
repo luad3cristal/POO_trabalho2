@@ -11,7 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 
 public class ReportPlugin implements IPlugin {
     private final ReportService reportService = new ReportServiceImpl();
@@ -20,26 +22,53 @@ public class ReportPlugin implements IPlugin {
     public boolean init() {
         IUIController uiController = ICore.getInstance().getUIController();
 
-        MenuItem menuItem = uiController.createMenuItem("Relatórios", "Ver Relatórios");
+        MenuItem menuItem = uiController.createMenuItem("Relatórios", "Livros Emprestados");
         menuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("=== Relatório de Empréstimos ===\n");
-                reportService.getLoanReport().forEach(l -> sb.append(l).append("\n"));
-                sb.append("\n=== Relatório de Usuários ===\n");
-                reportService.getUserReport().forEach(u -> sb.append(u).append("\n"));
-                sb.append("\n=== Relatório de Livros ===\n");
-                reportService.getBookReport().forEach(b -> sb.append(b).append("\n"));
-
-                TextArea reportArea = new TextArea(sb.toString());
-                uiController.createTab("Relatórios", reportArea);
+                uiController.createTab("Relatórios", createReportView());
             }
         });
 
-        // Tab inicial (opcional)
-        uiController.createTab("Relatórios", new Rectangle(200, 200, Color.LIGHTYELLOW));
-
         return true;
+    }
+
+    private VBox createReportView() {
+        VBox mainContainer = new VBox(10);
+        mainContainer.setPadding(new Insets(20));
+        mainContainer.setStyle("-fx-background-color: #FFFACD;"); // LemonChiffon background
+        
+        // Title
+        Label title = new Label("Relatório de Livros Emprestados");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        
+        // Report content
+        TextArea reportArea = new TextArea();
+        reportArea.setEditable(false);
+        reportArea.setPrefHeight(500);
+        reportArea.setStyle("-fx-font-family: monospace; -fx-font-size: 14px;");
+        
+        // Generate report
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== RELATÓRIO DE LIVROS EMPRESTADOS ===\n\n");
+        
+        try {
+            java.util.List<String> loanReport = reportService.getLoanReport();
+            if (loanReport.isEmpty()) {
+                sb.append("Nenhum empréstimo encontrado.\n");
+            } else {
+                for (String loan : loanReport) {
+                    sb.append(loan).append("\n");
+                }
+            }
+        } catch (Exception e) {
+            sb.append("Erro ao gerar relatório: ").append(e.getMessage()).append("\n");
+        }
+        
+        sb.append("\n=== FIM DO RELATÓRIO ===");
+        reportArea.setText(sb.toString());
+        
+        mainContainer.getChildren().addAll(title, reportArea);
+        return mainContainer;
     }
 }
