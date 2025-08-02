@@ -1,36 +1,34 @@
 package br.edu.ifba.inf008.plugins;
 
-import br.edu.ifba.inf008.interfaces.DatabaseService;
-
 import br.edu.ifba.inf008.interfaces.IPlugin;
+import br.edu.ifba.inf008.interfaces.DatabaseService;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
+import br.edu.ifba.inf008.interfaces.model.Book;
+import br.edu.ifba.inf008.plugins.books.service.BookServiceImpl;
 
 import javafx.scene.control.MenuItem;
-import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 
-public class MyPlugin implements IPlugin {
-    private final DatabaseService<?> dbService;
+public class BookPlugin implements IPlugin {
+    private DatabaseService<Book> bookService = new BookServiceImpl();
 
-    public MyPlugin(DatabaseService<?> dbService) {
-        this.dbService = dbService;
-    }
-
+    @Override
     public boolean init() {
         IUIController uiController = ICore.getInstance().getUIController();
 
-        MenuItem menuItem = uiController.createMenuItem("Menu 1", "My Menu Item");
+        MenuItem menuItem = uiController.createMenuItem("Livros", "Listar Livros");
         menuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("I've been clicked!");
+                bookService.readAll().forEach(b -> System.out.println(b.getTitle()));
             }
         });
 
-        uiController.createTab("new tab", new Rectangle(200, 200, Color.LIGHTSTEELBLUE));
+        uiController.createTab("Livros", new Rectangle(200, 200, Color.LIGHTGREEN));
 
         return true;
     }
