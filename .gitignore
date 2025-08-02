@@ -9,6 +9,10 @@ target/
 *.class
 *.log
 
+# JAR files (exceto bibliotecas essenciais se houver)
+*.jar
+!libs/*.jar  # Mantém JARs na pasta libs se necessário
+
 # Scripts locais
 mvn-java24.bat
 
