@@ -32,12 +32,7 @@ mvn -f plugins/user-plugin/pom.xml install
 ### Executar Aplicação
 
 ```bash
-# Executar aplicação principal
 mvn exec:java -pl app
-
-# Ou executar a partir do diretório app
-cd app
-mvn exec:java
 ```
 
 ### Banco de Dados
@@ -58,32 +53,26 @@ docker-compose logs mariadb
 ### Testes de Integração dos Plugins
 
 ```bash
-# Executar todos os testes de plugins
-mvn -f app/pom.xml test -Dtest="PluginTests"
-
-# Testa:
-# - Funcionamento individual de cada plugin
-# - Recarregamento dinâmico de plugins
-# - Isolamento entre plugins
-# - Comunicação apenas via interfaces
-# - UI modular e dinâmica
+mvn -f app/pom.xml test -Dtest="PluginTest"
 ```
+
+Valida:
+- Carregamento dinâmico de plugins
+- Isolamento entre plugins
+- Comunicação via interfaces
+- Interface modular
 
 ### Testes Funcionais do Sistema
 
 ```bash
-# Executar testes funcionais
 mvn -f app/pom.xml test -Dtest="SystemFunctionalTest"
-
-# Testa:
-# - Estrutura de CRUDs implementada
-# - Navegação e UI
-# - Relatórios
-# - Testes unitários (estrutura)
-# - Integração banco → serviço → UI
-# - Sistema sem plugins específicos
-# - Graceful degradation
 ```
+
+Valida:
+- Operações CRUD
+- Navegação da interface
+- Integração com banco de dados
+- Relatórios
 
 ### Executar Todos os Testes
 
@@ -93,13 +82,6 @@ mvn -f app/pom.xml test-compile
 
 #Executar os testes do app
 mvn -f app/pom.xml test
-
-# Ou execute cada classe separadamente:
-mvn -f app/pom.xml test -Dtest="PluginTest"
-mvn -f app/pom.xml test -Dtest="SystemFunctionalTest"
-
-# Ver relatórios de teste
-# Verificar: app/target/surefire-reports/
 ```
 
 ## 🔌 Criação de Novos Plugins
@@ -248,17 +230,42 @@ ls -la plugins/*.jar
 mvn clean install
 ```
 
-## 📊 Status dos Requisitos
+## 🎯 Características Técnicas
 
-✅ **Itens 29-33**: Testes de integração e isolamento dos plugins (PluginTests - 5 testes)  
-✅ **Itens 34-37**: Testes funcionais finais do sistema (SystemFunctionalTest - 9 testes)  
-✅ **Total**: 14 testes cobrindo todos os requisitos da TO-DO list  
-✅ **Arquitetura Microkernel**: Implementada com core + plugins  
-✅ **UI Dinâmica**: JavaFX com carregamento modular  
-✅ **Banco de Dados**: MariaDB com Docker  
-✅ **Build Automatizado**: Maven multi-módulo
+- **Arquitetura**: Microkernel com carregamento dinâmico de plugins
+- **Interface**: JavaFX com abas dinâmicas criadas pelos plugins
+- **Banco de Dados**: MariaDB 11+ com Docker
+- **Build**: Maven multi-módulo
+- **Testes**: JUnit 5 com testes de integração e funcionais
+- **Hot-reload**: Plugins podem ser recarregados sem reinicializar a aplicação
 
-## 👥 Equipe de Desenvolvimento
+## 📋 Funcionalidades
 
-Projeto desenvolvido para a disciplina INF008 - Arquitetura de Software  
-IFBA - Instituto Federal da Bahia
+### Gestão de Usuários
+
+- Cadastro, edição e exclusão de usuários
+- Listagem com pesquisa
+- Validação de dados
+
+### Gestão de Livros
+
+- Controle de acervo
+- Informações de autor, ISBN, ano
+- Controle de disponibilidade
+
+### Sistema de Empréstimos
+
+- Registro de empréstimos e devoluções
+- Controle de prazos
+- Histórico de transações
+
+### Relatórios
+
+- Relatórios de empréstimos ativos
+- Estatísticas de uso
+- Exportação de dados
+
+---
+
+**Projeto desenvolvido para INF008 - Arquitetura de Software**  
+**IFBA - Instituto Federal da Bahia**
