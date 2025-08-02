@@ -22,8 +22,8 @@ public class Loan {
     public void setId(int id) { this.id = id; }
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
-    public int getLivroId() { return bookId; }
-    public void setLivroId(int bookId) { this.bookId = bookId; }
+    public int getBookId() { return bookId; }
+    public void setBookId(int bookId) { this.bookId = bookId; }
     public Date getLoanDate() { return loanDate; }
     public void setLoanDate(Date loanDate) { this.loanDate = loanDate; }
     public Date getReturnDate() { return returnDate; }

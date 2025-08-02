@@ -17,7 +17,7 @@ public class LoanDaoImpl implements LoanDao {
         try (PreparedStatement stmt = conn.prepareStatement(
                 "INSERT INTO loans (user_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?)")) {
             stmt.setInt(1, loan.getUserId());
-            stmt.setInt(2, loan.getLivroId());
+            stmt.setInt(2, loan.getBookId());
             stmt.setDate(3, new java.sql.Date(loan.getLoanDate().getTime()));
             if (loan.getReturnDate() != null) {
                 stmt.setDate(4, new java.sql.Date(loan.getReturnDate().getTime()));
@@ -76,7 +76,7 @@ public class LoanDaoImpl implements LoanDao {
         try (PreparedStatement stmt = conn.prepareStatement(
                 "UPDATE loans SET user_id=?, book_id=?, loan_date=?, return_date=? WHERE loan_id=?")) {
             stmt.setInt(1, loan.getUserId());
-            stmt.setInt(2, loan.getLivroId());
+            stmt.setInt(2, loan.getBookId());
             stmt.setDate(3, new java.sql.Date(loan.getLoanDate().getTime()));
             if (loan.getReturnDate() != null) {
                 stmt.setDate(4, new java.sql.Date(loan.getReturnDate().getTime()));

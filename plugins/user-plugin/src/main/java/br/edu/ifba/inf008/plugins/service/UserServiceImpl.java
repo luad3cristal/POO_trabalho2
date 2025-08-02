@@ -2,7 +2,7 @@ package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.UserService;
 import br.edu.ifba.inf008.interfaces.model.User;
-import br.edu.ifba.inf008.plugins.DBConnection;
+import br.edu.ifba.inf008.interfaces.database.DBConnection;
 import br.edu.ifba.inf008.plugins.dao.UserDao;
 import br.edu.ifba.inf008.plugins.dao.UserDaoImpl;
 

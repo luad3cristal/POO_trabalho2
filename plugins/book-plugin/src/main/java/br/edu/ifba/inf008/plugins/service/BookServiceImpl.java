@@ -2,7 +2,7 @@ package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.BookService;
 import br.edu.ifba.inf008.interfaces.model.Book;
-import br.edu.ifba.inf008.plugins.DBConnection;
+import br.edu.ifba.inf008.interfaces.database.DBConnection;
 import br.edu.ifba.inf008.plugins.dao.BookDao;
 import br.edu.ifba.inf008.plugins.dao.BookDaoImpl;
 

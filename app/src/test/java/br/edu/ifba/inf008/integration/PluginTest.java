@@ -19,11 +19,11 @@ import java.util.List;
 /**
  * Testes de Integração dos Plugins (Itens 29-33)
  * 
- * Item 29: Testar funcionamento individual de cada plugin
- * Item 30: Testar recarregamento de plugins sem recompilar o app
- * Item 31: Garantir que exclusão de um plugin não afeta outros
- * Item 32: Validar comunicação dos plugins apenas via interfaces
- * Item 33: Validar carregamento de UI de forma modular e dinâmica
+ * Testar funcionamento individual de cada plugin
+ * Testar recarregamento de plugins sem recompilar o app
+ * Garantir que exclusão de um plugin não afeta outros
+ * Validar comunicação dos plugins apenas via interfaces
+ * Validar carregamento de UI de forma modular e dinâmica
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Testes de Integração dos Plugins")
@@ -42,15 +42,15 @@ public class PluginTest {
     }
 
     /**
-     * Item 29: Testar funcionamento individual de cada plugin
+     *  Testar funcionamento individual de cada plugin
      */
     @Test
     @Order(1)
-    @DisplayName("Item 29: Funcionamento individual dos plugins")
+    @DisplayName("Funcionamento individual dos plugins")
     void testItem29_IndividualPluginFunctionality() {
-        System.out.println("🧪 Item 29: Testando funcionamento individual dos plugins...");
-        
-        assertTrue(pluginJarPaths.size() >= 4, 
+        System.out.println("🧪 Testando funcionamento individual dos plugins...");
+
+        assertTrue(pluginJarPaths.size() >= 4,
             "Deve haver pelo menos 4 plugins (User, Book, Loan, Report). Encontrados: " + pluginJarPaths.size());
         
         for (String jarPath : pluginJarPaths) {
@@ -80,17 +80,17 @@ public class PluginTest {
             System.out.println("✅ Plugin OK: " + getPluginName(jarPath));
         }
         
-        System.out.println("\n✅ Item 29: Todos os plugins funcionam individualmente");
+        System.out.println("\n✅  Todos os plugins funcionam individualmente");
     }
 
     /**
-     * Item 30: Testar estrutura para recarregamento de plugins
+     *  Testar estrutura para recarregamento de plugins
      */
     @Test
     @Order(2)
-    @DisplayName("Item 30: Estrutura para recarregamento de plugins")
+    @DisplayName("Estrutura para recarregamento de plugins")
     void testItem30_PluginReloadingStructure() {
-        System.out.println("🧪 Item 30: Testando estrutura de recarregamento...");
+        System.out.println("🧪 Testando estrutura de recarregamento...");
         
         // Verificar se plugins podem ser carregados dinamicamente
         int initialPluginCount = pluginJarPaths.size();
@@ -112,18 +112,19 @@ public class PluginTest {
         loadedPlugins.clear();
         assertEquals(0, loadedPlugins.size(), "Plugins devem poder ser removidos");
         
-        System.out.println("✅ Item 30: Estrutura de recarregamento funcional");
+        System.out.println("✅ Estrutura de recarregamento funcional");
     }
 
     /**
-     * Item 31: Garantir que exclusão de um plugin não afeta outros
+     *  Garantir que exclusão de um plugin não afeta outros
      */
     @Test
     @Order(3)
-    @DisplayName("Item 31: Isolamento entre plugins")
+    @DisplayName("Isolamento entre plugins")
     void testItem31_PluginIsolation() {
-        System.out.println("🧪 Item 31: Testando isolamento entre plugins...");
-        
+        System.out.println("🧪 Testando isolamento entre plugins...");
+        // Verificar se há pelo menos 2 plugins para testar isolamento
+        assertFalse(pluginJarPaths.isEmpty(), "Deve haver plugins para testar isolamento");
         if (pluginJarPaths.size() < 2) {
             System.out.println("⚠️ Necessário pelo menos 2 plugins para testar isolamento");
             return;
@@ -151,17 +152,17 @@ public class PluginTest {
             assertTrue(plugin instanceof IPlugin, "Plugin deve continuar sendo IPlugin");
         }
         
-        System.out.println("✅ Item 31: Plugins são isolados e independentes");
+        System.out.println("✅ Plugins são isolados e independentes");
     }
 
     /**
-     * Item 32: Validar comunicação dos plugins apenas via interfaces
+     *  Validar comunicação dos plugins apenas via interfaces
      */
     @Test
     @Order(4)
-    @DisplayName("Item 32: Comunicação via interfaces apenas")
+    @DisplayName("Comunicação via interfaces apenas")
     void testItem32_InterfaceOnlyCommunication() {
-        System.out.println("🧪 Item 32: Testando comunicação via interfaces...");
+        System.out.println("🧪 Testando comunicação via interfaces...");
         
         for (String jarPath : pluginJarPaths) {
             System.out.println("\n--- Analisando plugin: " + getPluginName(jarPath) + " ---");
@@ -191,18 +192,18 @@ public class PluginTest {
             System.out.println("✅ Plugin está no pacote correto: " + packageName);
         }
         
-        System.out.println("\n✅ Item 32: Comunicação apenas via interfaces validada");
+        System.out.println("\n✅  Comunicação apenas via interfaces validada");
     }
 
     /**
-     * Item 33: Validar carregamento de UI de forma modular e dinâmica
+     *  Validar carregamento de UI de forma modular e dinâmica
      */
     @Test
     @Order(5)
-    @DisplayName("Item 33: UI modular e dinâmica")
+    @DisplayName("UI modular e dinâmica")
     void testItem33_ModularUILoading() {
-        System.out.println("🧪 Item 33: Testando carregamento modular da UI...");
-        
+        System.out.println("🧪 Testando carregamento modular da UI...");
+
         for (String jarPath : pluginJarPaths) {
             System.out.println("\n--- Testando UI do plugin: " + getPluginName(jarPath) + " ---");
             
@@ -219,7 +220,7 @@ public class PluginTest {
             validatePluginModularity(plugin, jarPath);
         }
         
-        System.out.println("\n✅ Item 33: UI é carregada de forma modular");
+        System.out.println("\n✅  UI é carregada de forma modular");
     }
     
     private void validatePluginModularity(IPlugin plugin, String jarPath) {

@@ -1,7 +1,6 @@
 package br.edu.ifba.inf008.plugins;
 
 import br.edu.ifba.inf008.interfaces.IPlugin;
-import br.edu.ifba.inf008.interfaces.DatabaseService;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
 import br.edu.ifba.inf008.interfaces.model.Loan;
@@ -13,13 +12,10 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 
 public class LoanPlugin implements IPlugin {
-    private DatabaseService<Loan> loanService = new LoanServiceImpl();
-    private LoanServiceImpl loanServiceImpl = new LoanServiceImpl();
+    private LoanServiceImpl loanService = new LoanServiceImpl();
 
     @Override
     public boolean init() {
@@ -87,8 +83,8 @@ public class LoanPlugin implements IPlugin {
         try {
             java.util.List<Loan> loans = loanService.readAll();
             for (Loan loan : loans) {
-                String userName = loanServiceImpl.getUserNameById(loan.getUserId());
-                String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                String userName = loanService.getUserNameById(loan.getUserId());
+                String bookTitle = loanService.getBookTitleById(loan.getBookId());
 
                 String loanInfo = String.format("%d. Usuário: %s - Livro: %s \nData de Empréstimo: %s | Data de Devolução: %s",
                     loan.getId(),
@@ -211,8 +207,8 @@ public class LoanPlugin implements IPlugin {
                         messageLabel.setStyle("-fx-text-fill: red;");
                         return;
                     }
-                    userId = loanServiceImpl.getUserIdByName(userNameField.getText().trim());
-                    bookId = loanServiceImpl.getBookIdByTitle(bookNameField.getText().trim());
+                    userId = loanService.getUserIdByName(userNameField.getText().trim());
+                    bookId = loanService.getBookIdByTitle(bookNameField.getText().trim());
                     
                     if (userId == null) {
                         messageLabel.setText("Usuário não encontrado com o nome: " + userNameField.getText());
@@ -228,7 +224,7 @@ public class LoanPlugin implements IPlugin {
                 
                 Loan newLoan = new Loan();
                 newLoan.setUserId(userId);
-                newLoan.setLivroId(bookId);
+                newLoan.setBookId(bookId);
                 newLoan.setLoanDate(java.sql.Date.valueOf(loanDatePicker.getValue()));
                 
                 if (returnDatePicker.getValue() != null) {
@@ -314,8 +310,8 @@ public class LoanPlugin implements IPlugin {
                         messageLabel.setText("Empréstimo já devolvido.");
                         messageLabel.setStyle("-fx-text-fill: orange;");
                     } else {
-                        String userName = loanServiceImpl.getUserNameById(loan.getUserId());
-                        String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                        String userName = loanService.getUserNameById(loan.getUserId());
+                        String bookTitle = loanService.getBookTitleById(loan.getBookId());
                         loanInfoLabel.setText(String.format("ID: %d - Usuário: %s - Livro: %s\nData do Empréstimo: %s", 
                             loan.getId(), userName, bookTitle, loan.getLoanDate()));
                         returnButton.setDisable(false);
@@ -410,8 +406,8 @@ public class LoanPlugin implements IPlugin {
                 Loan loan = loanService.read(id);
                 
                 if (loan != null) {
-                    String userName = loanServiceImpl.getUserNameById(loan.getUserId());
-                    String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                    String userName = loanService.getUserNameById(loan.getUserId());
+                    String bookTitle = loanService.getBookTitleById(loan.getBookId());
                     loanInfoLabel.setText(String.format("ID: %d  - Usuário: %s - Livro: %s \nEmpréstimo: %s - Devolução: %s", 
                         loan.getId(), userName, bookTitle, 
                         loan.getLoanDate(), loan.getReturnDate() != null ? loan.getReturnDate().toString() : "Pendente"));

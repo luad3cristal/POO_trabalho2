@@ -2,7 +2,7 @@ package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.LoanService;
 import br.edu.ifba.inf008.interfaces.model.Loan;
-import br.edu.ifba.inf008.plugins.DBConnection;
+import br.edu.ifba.inf008.interfaces.database.DBConnection;
 import br.edu.ifba.inf008.plugins.dao.LoanDao;
 import br.edu.ifba.inf008.plugins.dao.LoanDaoImpl;
 

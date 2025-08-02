@@ -51,7 +51,6 @@ public class UIController extends Application implements IUIController
 
         Scene scene = new Scene(vBox, 960, 600);
         
-        // Aplicar CSS personalizado para os menus
         scene.getStylesheets().add("data:text/css," +
             ".menu-item { -fx-background-color: #2196F3; -fx-text-fill: white;} " +
             ".menu-item:hover { -fx-background-color: #1976D2; } " +
@@ -64,7 +63,6 @@ public class UIController extends Application implements IUIController
     }
 
     public MenuItem createMenuItem(String menuText, String menuItemText) {
-        // Criar o menu caso ele nao exista
         Menu newMenu = null;
         for (Menu menu : menuBar.getMenus()) {
             if (menu.getText() == menuText) {
@@ -77,7 +75,6 @@ public class UIController extends Application implements IUIController
             menuBar.getMenus().add(newMenu);
         }
 
-        // Criar o menu item neste menu
         MenuItem menuItem = new MenuItem(menuItemText);
         newMenu.getItems().add(menuItem);
 
@@ -90,7 +87,6 @@ public class UIController extends Application implements IUIController
         tab.setContent(contents);
         tabPane.getTabs().add(tab);
         
-        // Automaticamente selecionar a nova aba
         tabPane.getSelectionModel().select(tab);
 
         return true;

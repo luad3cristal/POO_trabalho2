@@ -13,9 +13,7 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 
 public class BookPlugin implements IPlugin {
     private DatabaseService<Book> bookService = new BookServiceImpl();

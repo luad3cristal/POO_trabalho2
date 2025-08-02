@@ -1,6 +1,5 @@
 package br.edu.ifba.inf008.functional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -16,10 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
-/**
- * Testes funcionais finais para validar todo o sistema
- * Itens 34-37 da TO-DO list
- */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SystemFunctionalTest {
@@ -28,13 +23,8 @@ public class SystemFunctionalTest {
     private static final String DB_USER = "library_user";
     private static final String DB_PASSWORD = "library_password";
     
-    @BeforeEach
-    void setUp() {
-        // Configurações iniciais se necessário
-    }
-    
     /**
-     * Item 34: Testar toda a funcionalidade (CRUDs, navegação, relatórios)
+     * Testar toda a funcionalidade (CRUDs, navegação, relatórios)
      */
     @Test
     @Order(1)
@@ -140,7 +130,7 @@ public class SystemFunctionalTest {
     }
     
     /**
-     * Item 35: Criar testes JUnit para serviços e DAOs (Opcional)
+     * Criar testes JUnit para serviços e DAOs (Opcional)
      */
     @Test
     @Order(4)
@@ -165,7 +155,7 @@ public class SystemFunctionalTest {
     }
     
     /**
-     * Item 36: Validar integração banco → serviço → UI
+     * Validar integração banco → serviço → UI
      */
     @Test
     @Order(5)
@@ -227,10 +217,7 @@ public class SystemFunctionalTest {
         
         // Verificar se classes de conexão existem
         String[] connectionFiles = {
-            "../plugins/user-plugin/src/main/java/br/edu/ifba/inf008/plugins/DBConnection.java",
-            "../plugins/book-plugin/src/main/java/br/edu/ifba/inf008/plugins/DBConnection.java",
-            "../plugins/loan-plugin/src/main/java/br/edu/ifba/inf008/plugins/DBConnection.java",
-            "../plugins/report-plugin/src/main/java/br/edu/ifba/inf008/plugins/DBConnection.java"
+            "../interfaces/src/main/java/br/edu/ifba/inf008/interfaces/database/DBConnection.java"
         };
         
         // Pelo menos uma classe de conexão deve existir
@@ -275,7 +262,7 @@ public class SystemFunctionalTest {
     }
     
     /**
-     * Item 37: Testar aplicação sem um dos plugins carregados
+     * Testar aplicação sem um dos plugins carregados
      */
     @Test
     @Order(7)
