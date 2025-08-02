@@ -1,10 +1,10 @@
-package br.edu.ifba.inf008.plugins.books.service;
+package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.BookService;
 import br.edu.ifba.inf008.interfaces.model.Book;
 import br.edu.ifba.inf008.plugins.DBConnection;
-import br.edu.ifba.inf008.plugins.books.dao.BookDao;
-import br.edu.ifba.inf008.plugins.books.dao.BookDaoImpl;
+import br.edu.ifba.inf008.plugins.dao.BookDao;
+import br.edu.ifba.inf008.plugins.dao.BookDaoImpl;
 
 import java.sql.Connection;
 import java.util.List;

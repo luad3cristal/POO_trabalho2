@@ -5,7 +5,7 @@ import br.edu.ifba.inf008.interfaces.DatabaseService;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
 import br.edu.ifba.inf008.interfaces.model.Book;
-import br.edu.ifba.inf008.plugins.books.service.BookServiceImpl;
+import br.edu.ifba.inf008.plugins.service.BookServiceImpl;
 
 import javafx.scene.control.MenuItem;
 import javafx.event.ActionEvent;

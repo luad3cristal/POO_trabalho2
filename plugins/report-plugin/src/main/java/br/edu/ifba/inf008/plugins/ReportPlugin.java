@@ -4,7 +4,7 @@ import br.edu.ifba.inf008.interfaces.IPlugin;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
 import br.edu.ifba.inf008.interfaces.service.ReportService;
-import br.edu.ifba.inf008.plugins.reports.service.ReportServiceImpl;
+import br.edu.ifba.inf008.plugins.service.ReportServiceImpl;
 
 import javafx.scene.control.MenuItem;
 import javafx.event.ActionEvent;

@@ -1,10 +1,10 @@
-package br.edu.ifba.inf008.plugins.loans.service;
+package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.LoanService;
 import br.edu.ifba.inf008.interfaces.model.Loan;
 import br.edu.ifba.inf008.plugins.DBConnection;
-import br.edu.ifba.inf008.plugins.loans.dao.LoanDao;
-import br.edu.ifba.inf008.plugins.loans.dao.LoanDaoImpl;
+import br.edu.ifba.inf008.plugins.dao.LoanDao;
+import br.edu.ifba.inf008.plugins.dao.LoanDaoImpl;
 
 import java.sql.Connection;
 import java.util.List;

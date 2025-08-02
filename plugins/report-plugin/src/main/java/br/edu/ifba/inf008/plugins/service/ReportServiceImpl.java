@@ -1,8 +1,8 @@
-package br.edu.ifba.inf008.plugins.reports.service;
+package br.edu.ifba.inf008.plugins.service;
 
 import br.edu.ifba.inf008.interfaces.service.ReportService;
-import br.edu.ifba.inf008.plugins.reports.dao.ReportDao;
-import br.edu.ifba.inf008.plugins.reports.dao.ReportDaoImpl;
+import br.edu.ifba.inf008.plugins.dao.ReportDao;
+import br.edu.ifba.inf008.plugins.dao.ReportDaoImpl;
 import br.edu.ifba.inf008.plugins.DBConnection;
 
 import java.sql.Connection;

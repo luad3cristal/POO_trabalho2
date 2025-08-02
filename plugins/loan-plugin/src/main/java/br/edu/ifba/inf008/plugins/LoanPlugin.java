@@ -5,7 +5,7 @@ import br.edu.ifba.inf008.interfaces.DatabaseService;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
 import br.edu.ifba.inf008.interfaces.model.Loan;
-import br.edu.ifba.inf008.plugins.loans.service.LoanServiceImpl;
+import br.edu.ifba.inf008.plugins.service.LoanServiceImpl;
 
 import javafx.scene.control.MenuItem;
 import javafx.event.ActionEvent;

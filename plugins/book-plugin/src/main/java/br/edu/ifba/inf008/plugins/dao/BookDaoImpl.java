@@ -1,4 +1,4 @@
-package br.edu.ifba.inf008.plugins.books.dao;
+package br.edu.ifba.inf008.plugins.dao;
 
 import br.edu.ifba.inf008.interfaces.model.Book;
 import java.sql.*;

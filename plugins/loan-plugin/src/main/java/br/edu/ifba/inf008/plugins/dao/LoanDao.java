@@ -1,4 +1,4 @@
-package br.edu.ifba.inf008.plugins.loans.dao;
+package br.edu.ifba.inf008.plugins.dao;
 
 import br.edu.ifba.inf008.interfaces.model.Loan;
 import java.util.List;

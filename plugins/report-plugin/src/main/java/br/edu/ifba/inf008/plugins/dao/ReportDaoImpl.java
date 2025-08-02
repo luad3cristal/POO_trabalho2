@@ -1,4 +1,4 @@
-package br.edu.ifba.inf008.plugins.reports.dao;
+package br.edu.ifba.inf008.plugins.dao;
 
 import java.sql.*;
 import java.util.ArrayList;

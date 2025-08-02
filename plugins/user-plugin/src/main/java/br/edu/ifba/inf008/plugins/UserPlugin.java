@@ -4,7 +4,7 @@ import br.edu.ifba.inf008.interfaces.IPlugin;
 import br.edu.ifba.inf008.interfaces.DatabaseService;
 import br.edu.ifba.inf008.interfaces.ICore;
 import br.edu.ifba.inf008.interfaces.IUIController;
-import br.edu.ifba.inf008.plugins.users.service.UserServiceImpl;
+import br.edu.ifba.inf008.plugins.service.UserServiceImpl;
 import br.edu.ifba.inf008.interfaces.model.User;
 
 import javafx.scene.control.MenuItem;
