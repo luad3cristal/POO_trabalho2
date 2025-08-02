@@ -19,6 +19,7 @@ import javafx.geometry.Pos;
 
 public class LoanPlugin implements IPlugin {
     private DatabaseService<Loan> loanService = new LoanServiceImpl();
+    private LoanServiceImpl loanServiceImpl = new LoanServiceImpl();
 
     @Override
     public boolean init() {
@@ -48,11 +49,15 @@ public class LoanPlugin implements IPlugin {
         HBox buttonBox = new HBox(10);
         Button listButton = new Button("Listar Empréstimos");
         Button addButton = new Button("Cadastrar Empréstimo");
+        Button returnButton = new Button("Registrar Devolução");
+        Button deleteButton = new Button("Excluir Empréstimo");
         
         listButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px;");
         addButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px;");
+        returnButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px;");
+        deleteButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px;");
         
-        buttonBox.getChildren().addAll(listButton, addButton);
+        buttonBox.getChildren().addAll(listButton, addButton, returnButton, deleteButton);
         
         // Content area
         VBox contentArea = new VBox(10);
@@ -63,6 +68,8 @@ public class LoanPlugin implements IPlugin {
         // Button actions
         listButton.setOnAction(e -> showLoanList(contentArea));
         addButton.setOnAction(e -> showLoanForm(contentArea));
+        returnButton.setOnAction(e -> showReturnForm(contentArea));
+        deleteButton.setOnAction(e -> showDeleteLoanForm(contentArea));
         
         mainContainer.getChildren().addAll(title, buttonBox, scrollPane);
         return mainContainer;
@@ -79,10 +86,13 @@ public class LoanPlugin implements IPlugin {
         try {
             java.util.List<Loan> loans = loanService.readAll();
             for (Loan loan : loans) {
-                String loanInfo = String.format("%d. %d - %d - %s - %s", 
+                String userName = loanServiceImpl.getUserNameById(loan.getUserId());
+                String bookTitle = loanServiceImpl.getBookTitleById(loan.getLivroId());
+                
+                String loanInfo = String.format("%d. %s - %s - %s - %s", 
                     loan.getId(), 
-                    loan.getUserId(), 
-                    loan.getLivroId(), 
+                    userName, 
+                    bookTitle, 
                     loan.getLoanDate() != null ? loan.getLoanDate().toString() : "N/A",
                     loan.getReturnDate() != null ? loan.getReturnDate().toString() : "Não devolvido");
                 
@@ -108,14 +118,48 @@ public class LoanPlugin implements IPlugin {
         VBox form = new VBox(10);
         form.setMaxWidth(400);
         
+        // Opção de cadastro
+        Label optionLabel = new Label("Escolha o método de cadastro:");
+        optionLabel.setStyle("-fx-font-weight: bold;");
+        
+        ToggleGroup toggleGroup = new ToggleGroup();
+        RadioButton idOption = new RadioButton("Cadastrar por ID");
+        RadioButton nameOption = new RadioButton("Cadastrar por Nome");
+        idOption.setToggleGroup(toggleGroup);
+        nameOption.setToggleGroup(toggleGroup);
+        idOption.setSelected(true);
+        
+        HBox optionBox = new HBox(10);
+        optionBox.getChildren().addAll(idOption, nameOption);
+        
+        // Campos para ID
+        VBox idFields = new VBox(10);
         TextField userIdField = new TextField();
         userIdField.setPromptText("ID do Usuário");
-        
         TextField bookIdField = new TextField();
         bookIdField.setPromptText("ID do Livro");
+        idFields.getChildren().addAll(
+            new Label("ID do Usuário:"), userIdField,
+            new Label("ID do Livro:"), bookIdField
+        );
         
+        // Campos para Nome
+        VBox nameFields = new VBox(10);
+        TextField userNameField = new TextField();
+        userNameField.setPromptText("Nome do Usuário");
+        TextField bookNameField = new TextField();
+        bookNameField.setPromptText("Título do Livro");
+        nameFields.getChildren().addAll(
+            new Label("Nome do Usuário:"), userNameField,
+            new Label("Título do Livro:"), bookNameField
+        );
+        nameFields.setVisible(false);
+        nameFields.setManaged(false);
+        
+        // Data
         DatePicker loanDatePicker = new DatePicker();
         loanDatePicker.setPromptText("Data do Empréstimo");
+        loanDatePicker.setValue(java.time.LocalDate.now());
         
         DatePicker returnDatePicker = new DatePicker();
         returnDatePicker.setPromptText("Data de Devolução (opcional)");
@@ -125,18 +169,65 @@ public class LoanPlugin implements IPlugin {
         
         Label messageLabel = new Label();
         
+        idOption.setOnAction(e -> {
+            idFields.setVisible(true);
+            idFields.setManaged(true);
+            nameFields.setVisible(false);
+            nameFields.setManaged(false);
+        });
+        
+        nameOption.setOnAction(e -> {
+            idFields.setVisible(false);
+            idFields.setManaged(false);
+            nameFields.setVisible(true);
+            nameFields.setManaged(true);
+        });
+        
         saveButton.setOnAction(e -> {
             try {
-                if (userIdField.getText().trim().isEmpty() || bookIdField.getText().trim().isEmpty() || 
-                    loanDatePicker.getValue() == null) {
-                    messageLabel.setText("Por favor, preencha os campos obrigatórios.");
+                if (loanDatePicker.getValue() == null) {
+                    messageLabel.setText("Por favor, selecione a data do empréstimo.");
                     messageLabel.setStyle("-fx-text-fill: red;");
                     return;
                 }
                 
+                Integer userId = null;
+                Integer bookId = null;
+                
+                if (idOption.isSelected()) {
+                    // Cadastro por ID
+                    if (userIdField.getText().trim().isEmpty() || bookIdField.getText().trim().isEmpty()) {
+                        messageLabel.setText("Por favor, preencha os IDs do usuário e livro.");
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                    userId = Integer.parseInt(userIdField.getText().trim());
+                    bookId = Integer.parseInt(bookIdField.getText().trim());
+                } else {
+                    // Cadastro por Nome
+                    if (userNameField.getText().trim().isEmpty() || bookNameField.getText().trim().isEmpty()) {
+                        messageLabel.setText("Por favor, preencha o nome do usuário e título do livro.");
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                    userId = loanServiceImpl.getUserIdByName(userNameField.getText().trim());
+                    bookId = loanServiceImpl.getBookIdByTitle(bookNameField.getText().trim());
+                    
+                    if (userId == null) {
+                        messageLabel.setText("Usuário não encontrado com o nome: " + userNameField.getText());
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                    if (bookId == null) {
+                        messageLabel.setText("Livro não encontrado com o título: " + bookNameField.getText());
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                }
+                
                 Loan newLoan = new Loan();
-                newLoan.setUserId(Integer.parseInt(userIdField.getText().trim()));
-                newLoan.setLivroId(Integer.parseInt(bookIdField.getText().trim()));
+                newLoan.setUserId(userId);
+                newLoan.setLivroId(bookId);
                 newLoan.setLoanDate(java.sql.Date.valueOf(loanDatePicker.getValue()));
                 
                 if (returnDatePicker.getValue() != null) {
@@ -145,9 +236,12 @@ public class LoanPlugin implements IPlugin {
                 
                 loanService.create(newLoan);
                 
+                // Limpar campos
                 userIdField.clear();
                 bookIdField.clear();
-                loanDatePicker.setValue(null);
+                userNameField.clear();
+                bookNameField.clear();
+                loanDatePicker.setValue(java.time.LocalDate.now());
                 returnDatePicker.setValue(null);
                 messageLabel.setText("Empréstimo cadastrado com sucesso!");
                 messageLabel.setStyle("-fx-text-fill: green;");
@@ -162,11 +256,198 @@ public class LoanPlugin implements IPlugin {
         });
         
         form.getChildren().addAll(
-            new Label("ID do Usuário:"), userIdField,
-            new Label("ID do Livro:"), bookIdField,
+            optionLabel, optionBox,
+            idFields, nameFields,
             new Label("Data do Empréstimo:"), loanDatePicker,
             new Label("Data de Devolução (opcional):"), returnDatePicker,
             saveButton, messageLabel
+        );
+        
+        contentArea.getChildren().addAll(formTitle, form);
+    }
+    
+    private void showReturnForm(VBox contentArea) {
+        contentArea.getChildren().clear();
+        
+        Label formTitle = new Label("Registrar Devolução");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        
+        VBox form = new VBox(10);
+        form.setMaxWidth(400);
+        
+        TextField loanIdField = new TextField();
+        loanIdField.setPromptText("ID do Empréstimo");
+        
+        Label loanInfoLabel = new Label();
+        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        
+        DatePicker returnDatePicker = new DatePicker();
+        returnDatePicker.setPromptText("Data de Devolução");
+        returnDatePicker.setValue(java.time.LocalDate.now());
+        
+        Button loadButton = new Button("Carregar Empréstimo");
+        loadButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #2196F3; -fx-text-fill: white;");
+        
+        Button returnButton = new Button("Registrar Devolução");
+        returnButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
+        returnButton.setDisable(true);
+        
+        Label messageLabel = new Label();
+        
+        loadButton.setOnAction(e -> {
+            try {
+                if (loanIdField.getText().trim().isEmpty()) {
+                    messageLabel.setText("Por favor, informe o ID do empréstimo.");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                
+                int id = Integer.parseInt(loanIdField.getText().trim());
+                Loan loan = loanService.read(id);
+                
+                if (loan != null) {
+                    if (loan.getReturnDate() != null) {
+                        loanInfoLabel.setText("Este empréstimo já foi devolvido em: " + loan.getReturnDate());
+                        returnButton.setDisable(true);
+                        messageLabel.setText("Empréstimo já devolvido.");
+                        messageLabel.setStyle("-fx-text-fill: orange;");
+                    } else {
+                        loanInfoLabel.setText(String.format("Empréstimo ID: %d | Usuário: %d | Livro: %d | Data: %s", 
+                            loan.getId(), loan.getUserId(), loan.getLivroId(), loan.getLoanDate()));
+                        returnButton.setDisable(false);
+                        messageLabel.setText("Empréstimo carregado. Pronto para devolução.");
+                        messageLabel.setStyle("-fx-text-fill: green;");
+                    }
+                } else {
+                    loanInfoLabel.setText("Empréstimo não encontrado.");
+                    returnButton.setDisable(true);
+                    messageLabel.setText("Empréstimo não encontrado.");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                }
+                
+            } catch (NumberFormatException ex) {
+                messageLabel.setText("ID deve ser um número válido.");
+                messageLabel.setStyle("-fx-text-fill: red;");
+            } catch (Exception ex) {
+                messageLabel.setText("Erro ao carregar empréstimo: " + ex.getMessage());
+                messageLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
+        
+        returnButton.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(loanIdField.getText().trim());
+                Loan loan = loanService.read(id);
+                
+                if (loan != null && loan.getReturnDate() == null) {
+                    loan.setReturnDate(java.sql.Date.valueOf(returnDatePicker.getValue()));
+                    loanService.update(loan);
+                    
+                    loanIdField.clear();
+                    loanInfoLabel.setText("");
+                    returnButton.setDisable(true);
+                    messageLabel.setText("Devolução registrada com sucesso!");
+                    messageLabel.setStyle("-fx-text-fill: green;");
+                } else {
+                    messageLabel.setText("Erro: Empréstimo não encontrado ou já devolvido.");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                }
+                
+            } catch (Exception ex) {
+                messageLabel.setText("Erro ao registrar devolução: " + ex.getMessage());
+                messageLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
+        
+        form.getChildren().addAll(
+            new Label("ID do Empréstimo:"), loanIdField, loadButton,
+            new Label("Informações do Empréstimo:"), loanInfoLabel,
+            new Label("Data de Devolução:"), returnDatePicker,
+            returnButton, messageLabel
+        );
+        
+        contentArea.getChildren().addAll(formTitle, form);
+    }
+    
+    private void showDeleteLoanForm(VBox contentArea) {
+        contentArea.getChildren().clear();
+        
+        Label formTitle = new Label("Excluir Empréstimo");
+        formTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+        
+        VBox form = new VBox(10);
+        form.setMaxWidth(400);
+        
+        TextField idField = new TextField();
+        idField.setPromptText("ID do Empréstimo");
+        
+        Label loanInfoLabel = new Label();
+        loanInfoLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; -fx-background-color: #f5f5f5; -fx-border-color: #ccc;");
+        
+        Button loadButton = new Button("Carregar");
+        loadButton.setStyle("-fx-font-size: 14px; -fx-padding: 5px 15px; -fx-background-color: #2196F3; -fx-text-fill: white;");
+        
+        Button deleteButton = new Button("EXCLUIR");
+        deleteButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-background-color: #F44336; -fx-text-fill: white;");
+        deleteButton.setDisable(true);
+        
+        Label messageLabel = new Label();
+        
+        loadButton.setOnAction(e -> {
+            try {
+                if (idField.getText().trim().isEmpty()) {
+                    messageLabel.setText("Por favor, informe o ID do empréstimo.");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                
+                int id = Integer.parseInt(idField.getText().trim());
+                Loan loan = loanService.read(id);
+                
+                if (loan != null) {
+                    loanInfoLabel.setText(String.format("ID: %d | Usuário: %d | Livro: %d | Empréstimo: %s | Devolução: %s", 
+                        loan.getId(), loan.getUserId(), loan.getLivroId(), 
+                        loan.getLoanDate(), loan.getReturnDate() != null ? loan.getReturnDate().toString() : "Pendente"));
+                    deleteButton.setDisable(false);
+                    messageLabel.setText("Empréstimo carregado. Confirme a exclusão.");
+                    messageLabel.setStyle("-fx-text-fill: orange;");
+                } else {
+                    loanInfoLabel.setText("Empréstimo não encontrado.");
+                    deleteButton.setDisable(true);
+                    messageLabel.setText("Empréstimo não encontrado.");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                }
+                
+            } catch (NumberFormatException ex) {
+                messageLabel.setText("ID deve ser um número válido.");
+                messageLabel.setStyle("-fx-text-fill: red;");
+            } catch (Exception ex) {
+                messageLabel.setText("Erro ao carregar empréstimo: " + ex.getMessage());
+                messageLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
+        
+        deleteButton.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText().trim());
+                loanService.delete(id);
+                
+                idField.clear();
+                loanInfoLabel.setText("");
+                deleteButton.setDisable(true);
+                messageLabel.setText("Empréstimo excluído com sucesso!");
+                messageLabel.setStyle("-fx-text-fill: green;");
+                
+            } catch (Exception ex) {
+                messageLabel.setText("Erro ao excluir empréstimo: " + ex.getMessage());
+                messageLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
+        
+        form.getChildren().addAll(
+            new Label("ID do Empréstimo:"), idField, loadButton,
+            new Label("Informações do Empréstimo:"), loanInfoLabel,
+            deleteButton, messageLabel
         );
         
         contentArea.getChildren().addAll(formTitle, form);

@@ -65,7 +65,6 @@ public class ReportPlugin implements IPlugin {
             sb.append("Erro ao gerar relatório: ").append(e.getMessage()).append("\n");
         }
         
-        sb.append("\n=== FIM DO RELATÓRIO ===");
         reportArea.setText(sb.toString());
         
         mainContainer.getChildren().addAll(title, reportArea);

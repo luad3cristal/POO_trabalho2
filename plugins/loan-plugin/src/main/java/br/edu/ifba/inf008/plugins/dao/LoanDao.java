@@ -9,4 +9,8 @@ public interface LoanDao {
     List<Loan> findAll();
     void update(Loan loan);
     void delete(int id);
+    String getUserNameById(int userId);
+    String getBookTitleById(int bookId);
+    Integer getUserIdByName(String userName);
+    Integer getBookIdByTitle(String bookTitle);
 }

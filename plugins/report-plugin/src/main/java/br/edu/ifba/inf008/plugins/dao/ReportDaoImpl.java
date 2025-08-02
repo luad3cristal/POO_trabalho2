@@ -16,21 +16,31 @@ public class ReportDaoImpl implements ReportDao {
         List<String> report = new ArrayList<>();
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(
-                "SELECT l.loan_id, u.name AS user, b.title AS book, l.loan_date, l.return_date " +
-                "FROM loans l JOIN users u ON l.user_id = u.user_id " +
-                "JOIN books b ON l.book_id = b.book_id"
+                "SELECT l.loan_id, u.name AS user_name, b.title AS book_title, b.author AS book_author, " +
+                "l.loan_date, l.return_date " +
+                "FROM loans l " +
+                "JOIN users u ON l.user_id = u.user_id " +
+                "JOIN books b ON l.book_id = b.book_id " +
+                "ORDER BY l.loan_date DESC"
             );
             while (rs.next()) {
-                report.add(
-                    "Empréstimo #" + rs.getInt("loan_id") +
-                    " | Usuário: " + rs.getString("user") +
-                    " | Livro: " + rs.getString("book") +
-                    " | Data: " + rs.getDate("loan_date") +
-                    " | Devolução: " + rs.getDate("return_date")
-                );
+                String returnInfo = rs.getDate("return_date") != null ? 
+                    "Devolvido em: " + rs.getDate("return_date") : 
+                    "Livro ainda não devolvido";
+                
+                report.add(String.format(
+                    "ID do Empréstimo: %d | Título: %s | Autor: %s \nUsuário: %s | Data Empréstimo: %s | %s \n\n",
+                    rs.getInt("loan_id"),
+                    rs.getString("book_title"),
+                    rs.getString("book_author"),
+                    rs.getString("user_name"),
+                    rs.getDate("loan_date"),
+                    returnInfo
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            report.add("Erro ao gerar relatório: " + e.getMessage());
         }
         return report;
     }

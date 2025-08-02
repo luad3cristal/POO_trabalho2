@@ -100,4 +100,56 @@ public class LoanDaoImpl implements LoanDao {
             e.printStackTrace();
         }
     }
+    
+    public String getUserNameById(int userId) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT name FROM users WHERE user_id = ?")) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Usuário ID: " + userId;
+    }
+    
+    public String getBookTitleById(int bookId) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT title FROM books WHERE book_id = ?")) {
+            stmt.setInt(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Livro ID: " + bookId;
+    }
+    
+    public Integer getUserIdByName(String userName) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT user_id FROM users WHERE name LIKE ?")) {
+            stmt.setString(1, "%" + userName + "%");
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public Integer getBookIdByTitle(String bookTitle) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT book_id FROM books WHERE title LIKE ?")) {
+            stmt.setString(1, "%" + bookTitle + "%");
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("book_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

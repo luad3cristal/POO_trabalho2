@@ -45,4 +45,20 @@ public class LoanServiceImpl implements LoanService {
     public void delete(int id) {
         loanDao.delete(id);
     }
+    
+    public String getUserNameById(int userId) {
+        return loanDao.getUserNameById(userId);
+    }
+    
+    public String getBookTitleById(int bookId) {
+        return loanDao.getBookTitleById(bookId);
+    }
+    
+    public Integer getUserIdByName(String userName) {
+        return loanDao.getUserIdByName(userName);
+    }
+    
+    public Integer getBookIdByTitle(String bookTitle) {
+        return loanDao.getBookIdByTitle(bookTitle);
+    }
 }
