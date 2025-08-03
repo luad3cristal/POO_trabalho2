@@ -35,6 +35,26 @@ mvn -f plugins/user-plugin/pom.xml install
 mvn exec:java -pl app
 ```
 
+### 🚀 Quick Start
+
+```bash
+# 1. Clonar e entrar no diretório
+git clone <repository-url>
+cd microkernel
+
+# 2. Compilar tudo
+mvn clean install
+
+# 3. Iniciar banco de dados (opcional)
+docker-compose up -d
+
+# 4. Executar todos os testes
+mvn -f app/pom.xml test -Dtest="*Test*"
+
+# 5. Executar aplicação
+mvn exec:java -pl app
+```
+
 ### Banco de Dados
 
 ```bash
@@ -50,39 +70,42 @@ docker-compose logs mariadb
 
 ## 🧪 Testes
 
-### Testes de Integração dos Plugins
+O sistema possui 24 testes automatizados distribuídos em 4 categorias que validam a arquitetura microkernel e funcionalidades dos plugins.
+
+### � Comando Geral
 
 ```bash
+# Executar TODOS os testes (recomendado)
+mvn -f app/pom.xml test -Dtest="*Test*"
+```
+
+### 📋 Comandos Específicos
+
+```bash
+# Testes de Integração - Carregamento e isolamento de plugins
 mvn -f app/pom.xml test -Dtest="PluginTest"
-```
 
-Valida:
-- Carregamento dinâmico de plugins
-- Isolamento entre plugins
-- Comunicação via interfaces
-- Interface modular
-
-### Testes Funcionais do Sistema
-
-```bash
+# Testes Funcionais - Estrutura do sistema e navegação
 mvn -f app/pom.xml test -Dtest="SystemFunctionalTest"
+
+# Testes CRUD - Operações Create, Read, Update, Delete
+mvn -f app/pom.xml test -Dtest="PluginCRUDTest"
+
+# Testes Comportamentais - Validações e performance
+mvn -f app/pom.xml test -Dtest="PluginBehaviorTest"
 ```
 
-Valida:
-- Operações CRUD
-- Navegação da interface
-- Integração com banco de dados
-- Relatórios
+### 🎯 O que os Comandos Realizam
 
-### Executar Todos os Testes
+| Comando                | Testes | Validação                                                      |
+| ---------------------- | ------ | -------------------------------------------------------------- |
+| `PluginTest`           | 5      | Carregamento dinâmico, isolamento e comunicação via interfaces |
+| `SystemFunctionalTest` | 9      | Estrutura CRUD, navegação, banco de dados e build              |
+| `PluginCRUDTest`       | 5      | Operações CRUD e integração entre plugins                      |
+| `PluginBehaviorTest`   | 5      | Regras de negócio, performance e funcionalidades avançadas     |
+| **Total**              | **24** | **Cobertura completa do sistema**                              |
 
-```bash
-# Compilar testes sem executar
-mvn -f app/pom.xml test-compile
-
-#Executar os testes do app
-mvn -f app/pom.xml test
-```
+**Resultado esperado:** `Tests run: 24, Failures: 0, Errors: 0, Skipped: 0`
 
 ## 🔌 Criação de Novos Plugins
 
@@ -228,6 +251,52 @@ ls -la plugins/*.jar
 
 # Recompilar plugins
 mvn clean install
+```
+
+### Problemas com Testes
+
+#### Testes Não Executam
+
+```bash
+# Compilar testes primeiro
+mvn -f app/pom.xml test-compile
+
+# Executar com padrão específico
+mvn -f app/pom.xml test -Dtest="*Test*"
+
+# Verificar se classes de teste existem
+ls -la app/src/test/java/br/edu/ifba/inf008/
+```
+
+#### Falhas de Plugin nos Testes
+
+```bash
+# Verificar se plugins estão compilados
+ls -la plugins/*.jar
+
+# Recompilar plugins antes dos testes
+mvn clean install
+mvn -f app/pom.xml test -Dtest="*Test*"
+```
+
+#### Aviso de Banco Indisponível
+
+**Comportamento Normal:** Os testes mostram aviso quando MariaDB não está rodando, mas continuam executando testes de estrutura.
+
+```bash
+# Para executar com banco (opcional)
+docker-compose up -d
+mvn -f app/pom.xml test -Dtest="*Test*"
+```
+
+#### Verbose nos Testes
+
+```bash
+# Executar com mais detalhes
+mvn -f app/pom.xml test -Dtest="*Test*" -X
+
+# Ver apenas resultados dos testes
+mvn -f app/pom.xml test -Dtest="*Test*" -q
 ```
 
 ## 🎯 Características Técnicas
