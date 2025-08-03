@@ -1,6 +1,10 @@
+<div align="center">
+
 # Sistema de Biblioteca - Arquitetura Microkernel
 
 Sistema de gerenciamento de biblioteca desenvolvido com arquitetura microkernel em Java 24, utilizando JavaFX para interface gráfica e MariaDB como banco de dados.
+
+</div>
 
 ## 🏗️ Arquitetura
 
@@ -336,5 +340,9 @@ mvn -f app/pom.xml test -Dtest="*Test*" -q
 
 ---
 
+<div align="center">
+
 **Projeto desenvolvido para a matéria de Programação Orientada a Objetos - INF008**  
 **IFBA - Instituto Federal da Bahia**
+
+</div>
