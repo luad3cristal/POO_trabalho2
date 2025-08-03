@@ -336,5 +336,5 @@ mvn -f app/pom.xml test -Dtest="*Test*" -q
 
 ---
 
-**Projeto desenvolvido para INF008 - Arquitetura de Software**  
+**Projeto desenvolvido para a matéria de Programação Orientada a Objetos - INF008**  
 **IFBA - Instituto Federal da Bahia**
